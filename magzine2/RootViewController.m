@@ -7,13 +7,14 @@
 //
 
 #import "RootViewController.h"
-
-#import "ModelController.h"
-
 #import "DataViewController.h"
 
 @interface RootViewController ()
-@property (readonly, strong, nonatomic) ModelController *modelController;
+@property (strong, nonatomic) UIPopoverController *popover;
+@property (strong, nonatomic) UIPageViewController *pageViewController;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UISlider *slider;
+
 @end
 
 @implementation RootViewController
@@ -23,31 +24,90 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    // Configure the page view controller and add it as a child view controller.
+    self.scrollView.bouncesZoom = NO;
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageViewController.delegate = self;
-
-    DataViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
-    NSArray *viewControllers = @[startingViewController];
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
-
     self.pageViewController.dataSource = self.modelController;
-
-    [self addChildViewController:self.pageViewController];
-    [self.view addSubview:self.pageViewController.view];
-
-    // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
-    CGRect pageViewRect = self.view.bounds;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        pageViewRect = CGRectInset(pageViewRect, 40.0, 40.0);
+    self.pageViewController.view.frame = self.scrollView.bounds;
+    DataViewController *currentViewController;
+    if (self.pageViewController.viewControllers.count) {
+        currentViewController = self.pageViewController.viewControllers[0];
+    }else{
+        currentViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
     }
-    self.pageViewController.view.frame = pageViewRect;
-
+    NSArray *viewControllers = @[currentViewController];
+    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
+    [self addChildViewController:self.pageViewController];
+    [self.scrollView addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
-
-    // Add the page view controller's gesture recognizers to the book view controller's view so that the gestures are started more easily.
     self.view.gestureRecognizers = self.pageViewController.gestureRecognizers;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
+    [self.view addGestureRecognizer:tap];
+    self.slider.minimumValue = 1;
+    [self.slider addTarget:self action:@selector(touchDown) forControlEvents:UIControlEventTouchDown];
+    [self.slider addTarget:self action:@selector(touchUpInside) forControlEvents:UIControlEventTouchUpInside];
+    [self.slider addTarget:self action:@selector(touchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
+    [self.slider addTarget:self action:@selector(valueChanged) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    self.scrollView.contentSize = self.view.bounds.size;
+}
+
+- (void)touchDown
+{
+    NSLog(@"touch down");
+}
+
+- (void)touchUpInside
+{
+    NSLog(@"touch up inside");
+}
+
+- (void)touchUpOutside
+{
+    NSLog(@"touch up outside");
+}
+
+- (void)valueChanged
+{
+    NSLog(@"value changed");
+}
+
+- (void)tap
+{
+    NSLog(@"tap");
+    self.navigationController.navigationBar.hidden = ! self.navigationController.navigationBar.hidden;
+    self.navigationController.toolbar.hidden = ! self.navigationController.toolbar.hidden;
+}
+
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    self.scrollView.zoomScale = 1.0;
+    NSLog(@"%@",[NSValue valueWithCGRect:self.view.bounds]);
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    self.pageViewController.view.frame = self.scrollView.bounds;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    self.scrollView.contentSize = self.scrollView.bounds.size;
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.pageViewController.view;
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,33 +137,37 @@
 
 - (UIPageViewControllerSpineLocation)pageViewController:(UIPageViewController *)pageViewController spineLocationForInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
+    self.navigationController.navigationBar.hidden = YES;
+    self.navigationController.toolbar.hidden = YES;
+    DataViewController *currentViewController;
+    if (self.pageViewController.viewControllers.count) {
+        currentViewController = self.pageViewController.viewControllers[0];
+    }else{
+        currentViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
+    }
     if (UIInterfaceOrientationIsPortrait(orientation) || ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)) {
-        // In portrait orientation or on iPhone: Set the spine position to "min" and the page view controller's view controllers array to contain just one view controller. Setting the spine position to 'UIPageViewControllerSpineLocationMid' in landscape orientation sets the doubleSided property to YES, so set it to NO here.
-        
-        UIViewController *currentViewController = self.pageViewController.viewControllers[0];
+        NSLog(@"Portrait");
         NSArray *viewControllers = @[currentViewController];
         [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
-        
         self.pageViewController.doubleSided = NO;
         return UIPageViewControllerSpineLocationMin;
+    }else{
+        NSLog(@"Landscape");
+        NSArray *viewControllers = nil;
+
+        NSUInteger indexOfCurrentViewController = [self.modelController indexOfViewController:currentViewController];
+        if (indexOfCurrentViewController == 0 || indexOfCurrentViewController % 2 == 0) {
+            UIViewController *nextViewController = [self.modelController pageViewController:self.pageViewController viewControllerAfterViewController:currentViewController];
+            viewControllers = @[currentViewController, nextViewController];
+        } else {
+            UIViewController *previousViewController = [self.modelController pageViewController:self.pageViewController viewControllerBeforeViewController:currentViewController];
+            viewControllers = @[previousViewController, currentViewController];
+        }
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
+        return UIPageViewControllerSpineLocationMid;
     }
-
-    // In landscape orientation: Set set the spine location to "mid" and the page view controller's view controllers array to contain two view controllers. If the current page is even, set it to contain the current and next view controllers; if it is odd, set the array to contain the previous and current view controllers.
-    DataViewController *currentViewController = self.pageViewController.viewControllers[0];
-    NSArray *viewControllers = nil;
-
-    NSUInteger indexOfCurrentViewController = [self.modelController indexOfViewController:currentViewController];
-    if (indexOfCurrentViewController == 0 || indexOfCurrentViewController % 2 == 0) {
-        UIViewController *nextViewController = [self.modelController pageViewController:self.pageViewController viewControllerAfterViewController:currentViewController];
-        viewControllers = @[currentViewController, nextViewController];
-    } else {
-        UIViewController *previousViewController = [self.modelController pageViewController:self.pageViewController viewControllerBeforeViewController:currentViewController];
-        viewControllers = @[previousViewController, currentViewController];
-    }
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
-
-
-    return UIPageViewControllerSpineLocationMid;
 }
+
+
 
 @end

@@ -25,13 +25,33 @@
 
 @implementation ModelController
 
-- (id)init
+- (id)initWithInfo:(NSDictionary *)info
 {
     self = [super init];
     if (self) {
         // Create the data model.
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        _pageData = [[dateFormatter monthSymbols] copy];
+        NSString *path = [info objectForKey:@"path"];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *dcoumentpath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+        NSString *bundleRoot = [dcoumentpath stringByAppendingPathComponent:path];
+        NSArray *dirContents = [[NSFileManager defaultManager]
+                                contentsOfDirectoryAtPath:bundleRoot error:nil];
+        NSMutableArray *images = [NSMutableArray array];
+        for (NSString *name in dirContents) {
+            if ([name hasSuffix:@"jpg"]) {
+                [images addObject:name];
+            }
+        }
+        NSLog(@"%@",dirContents);
+        //        NSLog(@"%@ %@",path,pass);
+//        ReaderDocument *document = [[ReaderDocument alloc]initWithFilePath:path password:pass];
+//        int count = document.pageCount.intValue;
+//        for (int i = 1; i <= count; i++) {
+//            ReaderDocument *page = [[ReaderDocument alloc]initWithFilePath:path password:pass];
+//            page.pageNumber = [NSNumber numberWithInt:i];
+//            [pageData addObject:page];
+//        }
+        _pageData = [NSArray arrayWithArray:[images sortedArrayUsingSelector:@selector(compare:)]];
     }
     return self;
 }

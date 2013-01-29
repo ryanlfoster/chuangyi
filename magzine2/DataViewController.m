@@ -9,6 +9,7 @@
 #import "DataViewController.h"
 
 @interface DataViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end
 
@@ -18,6 +19,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -29,7 +31,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.dataLabel.text = [self.dataObject description];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *dcoumentpath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    NSString *bundleRoot = [dcoumentpath stringByAppendingPathComponent:@"golf"];
+    NSString *path = [bundleRoot stringByAppendingPathComponent:self.dataObject];
+    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfFile:path]];
+    
 }
 
 @end

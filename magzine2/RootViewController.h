@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ModelController.h"
 
-@interface RootViewController : UIViewController <UIPageViewControllerDelegate>
-
-@property (strong, nonatomic) UIPageViewController *pageViewController;
+@interface RootViewController : UIViewController <UIPageViewControllerDelegate, UIScrollViewDelegate>
+@property (strong, nonatomic) ModelController *modelController;
 
 @end
