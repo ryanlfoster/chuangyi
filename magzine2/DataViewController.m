@@ -31,11 +31,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *dcoumentpath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    NSString *bundleRoot = [dcoumentpath stringByAppendingPathComponent:@"golf"];
-    NSString *path = [bundleRoot stringByAppendingPathComponent:self.dataObject];
-    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfFile:path]];
+    NSString *path = [self.magazine.folderURL.path stringByAppendingPathComponent:self.dataObject];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    self.imageView.image = [UIImage imageWithData:data];
     
 }
 

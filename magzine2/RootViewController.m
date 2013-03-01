@@ -85,7 +85,7 @@
 {
     NSLog(@"tap");
     self.navigationController.navigationBar.hidden = ! self.navigationController.navigationBar.hidden;
-    self.navigationController.toolbar.hidden = ! self.navigationController.toolbar.hidden;
+    self.navigationController.toolbar.alpha = ! self.navigationController.toolbar.alpha;
 }
 
 
@@ -138,14 +138,14 @@
 - (UIPageViewControllerSpineLocation)pageViewController:(UIPageViewController *)pageViewController spineLocationForInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
     self.navigationController.navigationBar.hidden = YES;
-    self.navigationController.toolbar.hidden = YES;
+    self.navigationController.toolbar.alpha = 0;
     DataViewController *currentViewController;
     if (self.pageViewController.viewControllers.count) {
         currentViewController = self.pageViewController.viewControllers[0];
     }else{
         currentViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
     }
-    if (UIInterfaceOrientationIsPortrait(orientation) || ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)) {
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
         NSLog(@"Portrait");
         NSArray *viewControllers = @[currentViewController];
         [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
@@ -154,7 +154,6 @@
     }else{
         NSLog(@"Landscape");
         NSArray *viewControllers = nil;
-
         NSUInteger indexOfCurrentViewController = [self.modelController indexOfViewController:currentViewController];
         if (indexOfCurrentViewController == 0 || indexOfCurrentViewController % 2 == 0) {
             UIViewController *nextViewController = [self.modelController pageViewController:self.pageViewController viewControllerAfterViewController:currentViewController];
@@ -167,7 +166,5 @@
         return UIPageViewControllerSpineLocationMid;
     }
 }
-
-
 
 @end

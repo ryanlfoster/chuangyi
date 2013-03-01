@@ -8,8 +8,43 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+    
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>Icon.png</string>
+                <string>Icon@2x.png</string>
+                <string>Icon-72.png</string>
+                <string>Icon-72@2x.png</string>
+                <string>Icon-Small-50.png</string>
+                <string>Icon-Small-50@2x.png</string>
+                <string>Icon-Small.png</string>
+                <string>Icon-Small@2x.png</string>
+            </array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+		<key>UINewsstandIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>list-item-cover-men1.png</string>
+				<string>list-item-cover-men@2x.png</string>
+			</array>
+			<key>UINewsstandBindingEdge</key>
+			<string>UINewsstandBindingEdgeLeft</string>
+			<key>UINewsstandBindingType</key>
+			<string>UINewsstandBindingTypeMagazine</string>
+		</dict>
+	</dict>
+
+
+    
 	<key>CFBundleIdentifier</key>
-	<string>cn.m9m10.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>cn.m9m10.chuangyi</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -24,10 +59,16 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>newsstand-content</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
 	<string>MainStoryboard_iPad</string>
+	<key>UINewsstandApp</key>
+	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

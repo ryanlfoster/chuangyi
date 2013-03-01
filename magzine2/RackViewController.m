@@ -9,45 +9,78 @@
 #import "RackViewController.h"
 #import "RootViewController.h"
 #import "ModelController.h"
-#import "ZipArchive.h"
 #import "MagazineCell.h"
+#import "Publisher.h"
+#import "MagazineObject.h"
+#import <NewsstandKit/NewsstandKit.h>
+#import <UAPush.h>
 
 @interface RackViewController ()
+
+@property (nonatomic, strong) NSArray *entry;
+@property (nonatomic, strong) NSURL *host;
+@property (strong, nonatomic) UIActivityIndicatorView *indicator;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 
 @end
 
 @implementation RackViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+
+- (IBAction)refresh:(id)sender {
+    [self.indicator startAnimating];
+    dispatch_queue_t queue = dispatch_queue_create("com.m9m10.chuangyi", 0);
+    dispatch_async(queue, ^{
+        NSDictionary *feed = [Publisher sharedPublisher].feed;
+        NSLog(@"%@",feed);
+        [[NSUserDefaults standardUserDefaults]setObject:feed forKey:@"feed"];
+        self.host = [NSURL URLWithString:[feed objectForKey:@"Host"]];
+        NSMutableArray *magazines = [NSMutableArray array];
+        for (NSDictionary *dict in [feed objectForKey:@"Entry"]) {
+            MagazineObject *magazine = [[MagazineObject alloc]initWithDictionary:dict andURL:self.host];
+            [magazines addObject:magazine];
+        };
+        self.entry = [NSArray arrayWithArray:magazines];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self arrangeCollectionView];
+            [self.indicator stopAnimating];
+        });
+    });
+
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
+    self.indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.indicator.frame = self.view.bounds;
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"background.jpg"]];
+    imageView.frame = self.view.bounds;
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    imageView.contentMode = UIViewContentModeScaleToFill;
+    [self.view addSubview:imageView];
+    [self.view addSubview:self.indicator];
+    [self.view bringSubviewToFront:self.collectionView];
+    self.indicator.hidesWhenStopped = YES;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.toolbar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     self.navigationController.toolbar.tintColor = [UIColor blackColor];
+    NSDictionary *feed = [[NSUserDefaults standardUserDefaults]objectForKey:@"feed"];
+    NSLog(@"%@",feed);
+    self.host = [NSURL URLWithString:[feed objectForKey:@"Host"]];
+    NSMutableArray *magazines = [NSMutableArray array];
+    for (NSDictionary *dict in [feed objectForKey:@"Entry"]) {
+        MagazineObject *magazine = [[MagazineObject alloc]initWithDictionary:dict andURL:self.host];
+        [magazines addObject:magazine];
+    };
+    self.entry = [NSArray arrayWithArray:magazines];
     [self arrangeCollectionView];
-    ZipArchive* zip = [[ZipArchive alloc] init];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *dcoumentpath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    NSString* l_zipfile = [[NSBundle mainBundle]pathForResource:@"golf" ofType:@"zip"];
-
-    NSString* unzipto = [dcoumentpath stringByAppendingString:@"/golf"] ;
-    if( [zip UnzipOpenFile:l_zipfile] ) {
-        BOOL ret = [zip UnzipFileTo:unzipto overWrite:YES];
-        if( NO==ret ) { }
-        [zip UnzipCloseFile];
-    }  
 	// Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self refresh:self.refreshButton];
 }
 
 - (void)arrangeCollectionView {
@@ -59,8 +92,7 @@
     }
     
     self.collectionView.collectionViewLayout = flowLayout;
-    [self.collectionView reloadData];
-    
+    //[self.collectionView reloadItemsAtIndexPaths:self.collectionView.indexPathsForVisibleItems];
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -73,49 +105,104 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)tap:(id)sender {
-    [self performSegueWithIdentifier:@"ReadSegue" sender:self];
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"ReadSegue"]) {
         NSLog(@"ReadSegue");
         RootViewController *rvc = segue.destinationViewController;
-        NSDictionary *info = @{@"path":@"golf"};
-        ModelController *model = [[ModelController alloc]initWithInfo:info];
+        MagazineObject *magezine = sender;
+        ModelController *model = [[ModelController alloc]initWithMagazine:magezine];
         rvc.modelController = model;
+        rvc.title = magezine.title;
     }
 }
 
 - (NSInteger)collectionView:(PSUICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 10;
+    return self.entry.count;
 }
 
 - (PSUICollectionViewCell *)collectionView:(PSUICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MagazineCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MagazineCell" forIndexPath:indexPath];
-    cell.imageCover.image = [UIImage imageNamed:@"FM.jpg"];
-    // make the cell's title the actual NSIndexPath value
-    //    cell.label.text = [NSString stringWithFormat:@"{%ld,%ld}", (long)indexPath.row, (long)indexPath.section];
-    //
-    //    // load the image for this cell
-    //    NSString *imageToLoad = [NSString stringWithFormat:@"%d.JPG", indexPath.row];
-    //    cell.image.image = [UIImage imageNamed:imageToLoad];
-    //
+    MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
+    cell.object = magazine;
+    NSURL *imageURL = [self getCacheData:magazine.cover];
+    if ([imageURL isFileURL]) {
+        [cell.imageCover setImageWithContentsOfFile:imageURL.path];
+    }else{
+        [cell.imageCover setImageWithContentsOfURL:imageURL];
+    }
+    cell.textField.text = magazine.title;
+    if (magazine.issue.status == NKIssueContentStatusNone) {
+        cell.progressView.hidden = YES;
+    }else if(magazine.issue.status == NKIssueContentStatusDownloading){
+        cell.progressView.hidden = NO;
+        cell.progressView.progress = magazine.progress;
+    }else if (magazine.issue.status == NKIssueContentStatusAvailable){
+        cell.progressView.hidden = YES;
+    }
     return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGSize size;
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        CGSize result = [[UIScreen mainScreen] bounds].size;
+        if(result.height == 480)
+        {
+            size = CGSizeMake(260, 392);
+        }
+        if(result.height == 568)
+        {
+            size = CGSizeMake(284, 480);
+        }
+    }else{
+        size = CGSizeMake(340, 467);
+    }
+    return size;
+}
+
+- (IBAction)download:(id)sender {
+    UIButton *button = sender;
+    MagazineCell *cell = (MagazineCell *)button.superview.superview;
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    NSLog(@"download %@",indexPath);
+    MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
+    NKIssue *issue = magazine.issue;
+    if(issue.status == NKIssueContentStatusAvailable) {
+        [self performSegueWithIdentifier:@"ReadSegue" sender:magazine];
+    } else if(issue.status == NKIssueContentStatusNone) {
+        [magazine download];
+        cell.progressView.alpha = 1;
+    } else if(issue.status == NKIssueContentStatusDownloading){
+        NSLog(@"downloading");
+    }
+}
+
+- (IBAction)trash:(id)sender {
+    UIButton *button = sender;
+    MagazineCell *cell = (MagazineCell *)button.superview.superview;
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    NSLog(@"trash %@",indexPath);
+    MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
+    [magazine trash];
 }
 
 - (void)collectionView:(PSUICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self performSegueWithIdentifier:@"ReadSegue" sender:indexPath];
+//    MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
+//    NKIssue *issue = magazine.issue;
+//    if(issue.status == NKIssueContentStatusAvailable) {
+//        [self performSegueWithIdentifier:@"ReadSegue" sender:magazine];
+//    } else if(issue.status == NKIssueContentStatusNone) {
+//        [magazine download];
+//    } else if(issue.status == NKIssueContentStatusDownloading){
+//        NSLog(@"downloading");
+//    }
 }
-
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
-//{
-//    return CGSizeMake(340, 600);
-//}
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
@@ -140,6 +227,35 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
     return CGSizeMake(0, 0);
+}
+
+- (void)viewDidUnload {
+    [self setRefreshButton:nil];
+    [super viewDidUnload];
+}
+
+- (NSURL *)getCacheData: (NSURL *)URL
+{
+    NSArray *myPathList = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *myPath    = [myPathList  objectAtIndex:0];
+    NSString *filePath = URL.path.pathComponents.lastObject;
+    myPath = [myPath stringByAppendingPathComponent:filePath];
+    if([[NSFileManager defaultManager] fileExistsAtPath:myPath])
+    {
+        NSLog(@"get %@",myPath);
+        return [NSURL fileURLWithPath:myPath];
+    }else{
+        [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:URL] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            UIImage *image = [UIImage imageWithData:data];
+            if (image) {
+                NSLog(@"writeToFile %@",myPath);
+                [data writeToFile:myPath atomically:YES];
+            }else{
+                NSLog(@"image error");
+            }
+        }];
+    }
+    return URL;
 }
 
 @end

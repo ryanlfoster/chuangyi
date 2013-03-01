@@ -7,10 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FXImageView.h"
+
+@class MagazineObject;
 
 @interface MagazineCell : PSUICollectionViewCell
-@property (strong, nonatomic) IBOutlet UIImageView *imageCover;
-@property (strong, nonatomic) IBOutlet UILabel *labelTitle;
-@property (strong, nonatomic) IBOutlet UILabel *labelIssue;
-
+@property (strong, nonatomic) FXImageView *imageCover;
+@property (strong, nonatomic) UIButton *leftButton;
+@property (strong, nonatomic) UIButton *rightButton;
+@property (strong, nonatomic) UIImageView *titleView;
+@property (strong, nonatomic) UITextField *textField;
+@property (strong, nonatomic) UIImageView *shelfView;
+@property (strong, nonatomic) UIImageView *frameView;
+@property (strong, nonatomic) UIImageView *glareView;
+@property (strong, nonatomic) UIProgressView *progressView;
+@property (strong, nonatomic) MagazineObject *object;
 @end
