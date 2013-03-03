@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "FXImageView.h"
+#import "MagazineObject.h"
+#import "RackViewController.h"
 
 @class MagazineObject;
 
@@ -21,5 +23,7 @@
 @property (strong, nonatomic) UIImageView *frameView;
 @property (strong, nonatomic) UIImageView *glareView;
 @property (strong, nonatomic) UIProgressView *progressView;
+@property (strong, nonatomic) UIActivityIndicatorView *indicator;
 @property (strong, nonatomic) MagazineObject *object;
+@property (strong, nonatomic) RackViewController *rackViewController;
 @end

@@ -31,15 +31,15 @@
     NSError *error = nil;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     if (!data) {
-        return @{};
+        return nil;
     }
     NSDictionary *feed = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
     return [NSDictionary dictionaryWithDictionary:feed];
 }
 
-- (void)subscripe
+- (void)subscribe
 {
-    NSString *productId = @"cn.m9m10.chuangyi.free";
+    NSString *productId = @"cn.m9m10.chuangyi.free1";
     SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:productId]];
     productsRequest.delegate=self;
     [productsRequest start];
@@ -102,18 +102,18 @@
     NSLog(@"Finished transaction");
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
     
-     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Subscription done"
-     message:[NSString stringWithFormat:@"Receipt to be sent: %@\nTransaction ID: %@",transaction.transactionReceipt,transaction.transactionIdentifier]
-     delegate:nil
-     cancelButtonTitle:@"Close"
-     otherButtonTitles:nil];
-     [alert show];
+//     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Subscription done"
+//     message:[NSString stringWithFormat:@"Receipt to be sent: %@\nTransaction ID: %@",transaction.transactionReceipt,transaction.transactionIdentifier]
+//     delegate:nil
+//     cancelButtonTitle:@"Close"
+//     otherButtonTitles:nil];
+//     [alert show];
      //[alert release];
      
     // save receipt
     //[[NSUserDefaults standardUserDefaults] setObject:transaction.transactionIdentifier forKey:@"receipt"];
     // check receipt
-    [self checkReceipt:transaction.transactionReceipt];
+    //[self checkReceipt:transaction.transactionReceipt];
 }
 
 -(void)errorWithTransaction:(SKPaymentTransaction *)transaction {

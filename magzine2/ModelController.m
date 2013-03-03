@@ -21,6 +21,7 @@
 
 @interface ModelController()
 @property (strong, nonatomic) NSArray *pageData;
+@property (strong, nonatomic) NSString *cover;
 @property (strong, nonatomic) MagazineObject *magazine;
 @end
 
@@ -30,21 +31,24 @@
 {
     self = [super init];
     if (self) {
-        NSArray *dirContents = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:magazine.folderURL.path error:nil];
-        NSMutableArray *images = [NSMutableArray array];
-        for (NSString *name in dirContents) {
-            if ([name hasSuffix:@"jpg"]) {
-                [images addObject:name];
-            }
-        }
-        _pageData = [NSArray arrayWithArray:[images sortedArrayUsingSelector:@selector(compare:)]];
-        NSLog(@"%@",_pageData);
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"index.json" relativeToURL:magazine.issue.contentURL]];
+        NSDictionary *index = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+        NSLog(@"%@",index);
+        _count = [index objectForKey:@"count"];
+        _cover = [index objectForKey:@"cover"];
+        _pageData = [NSArray arrayWithArray:[index objectForKey:@"pages"]];
         _magazine = magazine;
     }
     return self;
 }
 
-
+- (UIImage *)coverImage;
+{
+    NSURL *URL = [NSURL URLWithString:self.cover relativeToURL:self.magazine.issue.contentURL];
+    NSLog(@"%@",URL);
+    UIImage *cover = [UIImage imageWithContentsOfFile:URL.path];
+    return cover;
+}
 
 - (DataViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard
 {   

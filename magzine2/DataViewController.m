@@ -31,10 +31,18 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSString *path = [self.magazine.folderURL.path stringByAppendingPathComponent:self.dataObject];
+    NSString *path = [self.magazine.issue.contentURL.path stringByAppendingPathComponent:self.dataObject];
     NSData *data = [NSData dataWithContentsOfFile:path];
     self.imageView.image = [UIImage imageWithData:data];
     
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+        return toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown;
+    }
+    return YES;
 }
 
 @end

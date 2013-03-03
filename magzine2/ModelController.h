@@ -12,6 +12,8 @@
 @class DataViewController;
 
 @interface ModelController : NSObject <UIPageViewControllerDataSource>
+@property (nonatomic, strong) NSNumber *count;
+- (UIImage *)coverImage;
 - (DataViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard;
 - (NSUInteger)indexOfViewController:(DataViewController *)viewController;
 - (id)initWithMagazine:(MagazineObject *)magazine;

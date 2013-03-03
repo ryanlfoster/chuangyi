@@ -12,6 +12,8 @@
 
 @interface Publisher : NSObject<SKRequestDelegate,SKProductsRequestDelegate,SKPaymentTransactionObserver>
 + (Publisher *)sharedPublisher;
+@property (nonatomic, strong) NSString *content_available;
 @property (nonatomic, strong) NSDictionary *feed;
+- (void)subscribe;
 
 @end

@@ -32,30 +32,47 @@
     dispatch_queue_t queue = dispatch_queue_create("com.m9m10.chuangyi", 0);
     dispatch_async(queue, ^{
         NSDictionary *feed = [Publisher sharedPublisher].feed;
-        NSLog(@"%@",feed);
-        [[NSUserDefaults standardUserDefaults]setObject:feed forKey:@"feed"];
-        self.host = [NSURL URLWithString:[feed objectForKey:@"Host"]];
-        NSMutableArray *magazines = [NSMutableArray array];
-        for (NSDictionary *dict in [feed objectForKey:@"Entry"]) {
-            MagazineObject *magazine = [[MagazineObject alloc]initWithDictionary:dict andURL:self.host];
-            [magazines addObject:magazine];
-        };
-        self.entry = [NSArray arrayWithArray:magazines];
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (feed) {
+                [[NSUserDefaults standardUserDefaults]setObject:feed forKey:@"feed"];
+                self.host = [NSURL URLWithString:[feed objectForKey:@"Host"]];
+                NSMutableArray *magazines = [NSMutableArray array];
+                for (NSDictionary *dict in [feed objectForKey:@"Entry"]) {
+                    MagazineObject *magazine = [[MagazineObject alloc]initWithDictionary:dict andURL:self.host];
+                    [magazines addObject:magazine];
+                    if ([magazine.name isEqualToString:[Publisher sharedPublisher].content_available] && magazine.issue.status == NKIssueContentStatusNone) {
+                        NSURL *imageURL = [self getCacheData:magazine.cover];
+                        if ([imageURL isFileURL]) {
+                            UIImage *image = [UIImage imageWithContentsOfFile:imageURL.path];
+                            [[UIApplication sharedApplication]setNewsstandIconImage:image];
+                        }
+                        [magazine download];
+                        magazine.cell.progressView.hidden = NO;
+                    }
+                };
+                self.entry = [NSArray arrayWithArray:magazines];
+            }
             [self arrangeCollectionView];
             [self.indicator stopAnimating];
         });
     });
+}
 
+- (void)newIssue:(NSNotification *)info
+{
+    [self refresh:nil];
 }
 
 - (void)viewDidLoad
 {
+
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(newIssue:) name:@"content-available" object:nil];
     self.indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.indicator.frame = self.view.bounds;
+    self.indicator.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"background.jpg"]];
     imageView.frame = self.view.bounds;
-    imageView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     imageView.contentMode = UIViewContentModeScaleToFill;
     [self.view addSubview:imageView];
     [self.view addSubview:self.indicator];
@@ -92,7 +109,7 @@
     }
     
     self.collectionView.collectionViewLayout = flowLayout;
-    //[self.collectionView reloadItemsAtIndexPaths:self.collectionView.indexPathsForVisibleItems];
+    [self.collectionView reloadData];
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -125,8 +142,11 @@
 - (PSUICollectionViewCell *)collectionView:(PSUICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MagazineCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MagazineCell" forIndexPath:indexPath];
+    cell.rackViewController = self;
     MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
+    [collectionView bringSubviewToFront:cell];
     cell.object = magazine;
+    magazine.cell = cell;
     NSURL *imageURL = [self getCacheData:magazine.cover];
     if ([imageURL isFileURL]) {
         [cell.imageCover setImageWithContentsOfFile:imageURL.path];
@@ -165,23 +185,6 @@
     return size;
 }
 
-- (IBAction)download:(id)sender {
-    UIButton *button = sender;
-    MagazineCell *cell = (MagazineCell *)button.superview.superview;
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    NSLog(@"download %@",indexPath);
-    MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
-    NKIssue *issue = magazine.issue;
-    if(issue.status == NKIssueContentStatusAvailable) {
-        [self performSegueWithIdentifier:@"ReadSegue" sender:magazine];
-    } else if(issue.status == NKIssueContentStatusNone) {
-        [magazine download];
-        cell.progressView.alpha = 1;
-    } else if(issue.status == NKIssueContentStatusDownloading){
-        NSLog(@"downloading");
-    }
-}
-
 - (IBAction)trash:(id)sender {
     UIButton *button = sender;
     MagazineCell *cell = (MagazineCell *)button.superview.superview;
@@ -191,18 +194,6 @@
     [magazine trash];
 }
 
-- (void)collectionView:(PSUICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-//    MagazineObject *magazine = [self.entry objectAtIndex:indexPath.row];
-//    NKIssue *issue = magazine.issue;
-//    if(issue.status == NKIssueContentStatusAvailable) {
-//        [self performSegueWithIdentifier:@"ReadSegue" sender:magazine];
-//    } else if(issue.status == NKIssueContentStatusNone) {
-//        [magazine download];
-//    } else if(issue.status == NKIssueContentStatusDownloading){
-//        NSLog(@"downloading");
-//    }
-}
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {

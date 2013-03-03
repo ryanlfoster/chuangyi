@@ -7,6 +7,7 @@
 //
 
 #import "MagazineCell.h"
+#import <NewsstandKit/NewsstandKit.h>
 
 @implementation MagazineCell
 
@@ -20,6 +21,7 @@
     self.shelfView = [[UIImageView alloc]init];
     self.frameView = [[UIImageView alloc]init];
     self.glareView = [[UIImageView alloc]init];
+    self.indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.imageCover = [[FXImageView alloc]init];
     CGRect button_left_rect;
     CGRect button_right_rect;
@@ -47,7 +49,7 @@
             button_left_rect = CGRectMake(23, 339, 80, 36);
             button_right_rect = CGRectMake(146, 339, 80, 36);
             title_rect = CGRectMake(24, 20, 161, 18);
-            text_rect = CGRectMake(24, 46, 212, 7);
+            text_rect = CGRectMake(24, 40, 212, 18);
             frame_rect = CGRectMake(24, 59, 211, 270);
             glare_rect = CGRectMake(25, 72, 195, 255);
             progress_rect = CGRectMake(32, 191, 185, 13);
@@ -64,7 +66,7 @@
             button_left_rect = CGRectMake(31, 396, 93, 43);
             button_right_rect = CGRectMake(152, 396, 93, 43);
             title_rect = CGRectMake(32, 44, 161, 18);
-            text_rect = CGRectMake(32, 70, 212, 7);
+            text_rect = CGRectMake(32, 65, 212, 18);
             frame_rect = CGRectMake(28, 87, 226, 288);
             glare_rect = CGRectMake(28, 101, 209, 273);
             progress_rect = CGRectMake(33, 230, 200, 13);
@@ -138,6 +140,10 @@
     self.progressView.frame = progress_rect;
     [self addSubview: self.progressView];
     
+    self.indicator.frame = glare_rect;
+    self.indicator.hidesWhenStopped = YES;
+    [self addSubview:self.indicator];
+    
     [self.leftButton addTarget:self action:@selector(leftButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.rightButton addTarget:self action:@selector(rightButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     return self;
@@ -146,17 +152,33 @@
 - (void)leftButtonClick:(id)sender
 {
     NSLog(@"left %@",self.object);
-    
+    MagazineObject *magazine = self.object;
+    NKIssue *issue = magazine.issue;
+    if(issue.status == NKIssueContentStatusNone) {
+        [magazine download];
+        self.progressView.alpha = 1;
+    }
 }
 
 - (void)rightButtonClick:(id)sender
 {
     NSLog(@"right %@",self.object);
+    MagazineObject *magazine = self.object;
+    NKIssue *issue = magazine.issue;
+    if (issue.status == NKIssueContentStatusAvailable) {
+        [[NKLibrary sharedLibrary]removeIssue:issue];
+    }
 }
 
 - (void)tap:(id)sender
 {
     NSLog(@"tap %@",self.object);
+    MagazineObject *magazine = self.object;
+    NKIssue *issue = magazine.issue;
+    if (issue.status == NKIssueContentStatusAvailable && !magazine.busy) {
+        [self.rackViewController performSegueWithIdentifier:@"ReadSegue" sender:magazine];
+    }
 }
+
 
 @end

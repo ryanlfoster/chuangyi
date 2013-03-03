@@ -45,18 +45,9 @@
     }
 }
 
-- (NSURL *)zipURL
-{
-    return [NSURL URLWithString:@"magazine.zip" relativeToURL:self.issue.contentURL];
-}
-
-- (NSURL *)folderURL
-{
-    return [NSURL URLWithString:@"magazine" relativeToURL:self.issue.contentURL];
-}
-
 - (void)download
 {
+    self.cell.progressView.hidden = NO;
     NSURLRequest *request = [NSURLRequest requestWithURL:self.content];
     NKAssetDownload *download = [self.issue addAssetWithRequest:request];
     [download downloadWithDelegate:self];
@@ -71,7 +62,6 @@
 #pragma mark - NSURLConnectionDownloadDelegate
 
 -(void)updateProgressOfConnection:(NSURLConnection *)connection withTotalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
-    // get asset
     self.progress = 1.f*totalBytesWritten/expectedTotalBytes;
     self.cell.progressView.progress = self.progress;
     NSLog(@"%f",self.progress);
@@ -82,31 +72,32 @@
 }
 
 -(void)connectionDidResumeDownloading:(NSURLConnection *)connection totalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
-    NSLog(@"Resume downloading %f",1.f*totalBytesWritten/expectedTotalBytes);
     [self updateProgressOfConnection:connection withTotalBytesWritten:totalBytesWritten expectedTotalBytes:expectedTotalBytes];
 }
 
 -(void)connectionDidFinishDownloading:(NSURLConnection *)connection destinationURL:(NSURL *)destinationURL {
-    NSError *moveError=nil;
-    if ([[NSFileManager defaultManager] moveItemAtURL:destinationURL toURL:self.zipURL error:&moveError]) {
-        ZipArchive* zip = [[ZipArchive alloc] init];
-        if( [zip UnzipOpenFile:self.zipURL.path] ) {
-            BOOL ret = [zip UnzipFileTo:self.folderURL.path overWrite:YES];
-            if( NO==ret ) {
-                NSLog(@"unzip error");
-            }
-            [zip UnzipCloseFile];
-        }
-    }else{
-        NSLog(@"move error %@",moveError);
-    }
-    // update the Newsstand icon
-    UIImage *img = [UIImage imageWithData:[NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:self.cover] returningResponse:nil error:nil]];
-    if(img) {
-        [[UIApplication sharedApplication] setNewsstandIconImage:img];
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
-    }
+    UILocalNotification *notification = [[UILocalNotification alloc]init];
+    notification.soundName = UILocalNotificationDefaultSoundName;
+    notification.alertAction = @"创诣";
+    notification.alertBody = self.title;
+    notification.applicationIconBadgeNumber = 1;
+    UIApplication *app = [UIApplication sharedApplication];
+    [app presentLocalNotificationNow:notification];
+    ZipArchive *zip = [[ZipArchive alloc] init];
+    dispatch_queue_t queue = dispatch_queue_create("cn.m9m10.chuangyi", 0);
+    self.cell.indicator.hidden = NO;
+    self.cell.progressView.hidden = YES;
+    [self.cell.indicator startAnimating];
+    dispatch_async(queue, ^{
+        self.busy = YES;
+        [zip UnzipOpenFile:destinationURL.path];
+        [zip UnzipFileTo:self.issue.contentURL.path overWrite:YES];
+        [zip UnzipCloseFile];
+        self.busy = NO;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.cell.indicator stopAnimating];
+        });
+    });
 }
-
 
 @end

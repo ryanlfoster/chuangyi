@@ -10,6 +10,8 @@
 #import <NewsstandKit/NewsstandKit.h>
 #import "MagazineCell.h"
 
+@class MagazineCell;
+
 @interface MagazineObject : NSObject <NSURLConnectionDownloadDelegate>
 
 - (id)initWithDictionary:(NSDictionary *)dict andURL:(NSURL *)URL;
@@ -20,10 +22,9 @@
 @property (nonatomic, strong) NSURL *content;
 @property (nonatomic, strong) NKIssue *issue;
 @property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSURL *zipURL;
-@property (nonatomic, strong) NSURL *folderURL;
 @property (nonatomic, readwrite) float progress;
 @property (nonatomic, weak) MagazineCell *cell;
+@property (nonatomic, readwrite) BOOL busy;
 - (void)download;
 - (void)trash;
 @end

@@ -10,20 +10,19 @@
 #import "Publisher.h"
 #import <UAirship.h>
 #import <UAPush.h>
+#import "MagazineObject.h"
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NKDontThrottleNewsstandContentNotifications"];
-    
-    NSLog(@"LAUNCH OPTIONS = %@",launchOptions);
     NSMutableDictionary *airshipConfigOptions = [[NSMutableDictionary alloc] init] ;
     [airshipConfigOptions setValue:@"iURU4alcSGaP-fAxOkJFHQ" forKey:@"DEVELOPMENT_APP_KEY"];
     [airshipConfigOptions setValue:@"HakiEbkPSte4ptnTNywpsw" forKey:@"DEVELOPMENT_APP_SECRET"];
-    //[airshipConfigOptions setValue:@"Your production app key" forKey:@"PRODUCTION_APP_KEY"];
-    //[airshipConfigOptions setValue:@"Your production app secret" forKey:@"PRODUCTION_APP_SECRET"];
+    [airshipConfigOptions setValue:@"aq9jLwIFTACGtQICgcVauQ" forKey:@"PRODUCTION_APP_KEY"];
+    [airshipConfigOptions setValue:@"-e_K17WjR3iQMSiToYjIFA" forKey:@"PRODUCTION_APP_SECRET"];
     
 #ifdef DEBUG
+    [[NSUserDefaults standardUserDefaults]setBool: YES forKey:@"NKDontThrottleNewsstandContentNotifications"];
     [airshipConfigOptions setValue:@"NO" forKey:@"APP_STORE_OR_AD_HOC_BUILD"];
 #else
     [airshipConfigOptions setValue:@"YES" forKey:@"APP_STORE_OR_AD_HOC_BUILD"];
@@ -46,11 +45,16 @@
     // Register for remote notfications with the UA Library. This call is required.
     [[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
                                                          UIRemoteNotificationTypeSound |
-                                                         UIRemoteNotificationTypeAlert)];
+                                                         UIRemoteNotificationTypeAlert |
+                                                         UIRemoteNotificationTypeNewsstandContentAvailability)];
     
     // Handle any incoming incoming push notifications.
     // This will invoke `handleBackgroundNotification` on your UAPushNotificationDelegate.
     [[UAPush shared] handleNotification:[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey] applicationState:application.applicationState];
+    NSLog(@"launch");
+    NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    
+    [self handlePayload:payload];
     // Override point for customization after application launch.
     return YES;
 }
@@ -62,27 +66,12 @@
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    UALOG(@"Received remote notification: %@", userInfo);
-    
-    /*
-     [[UAPush shared] handleNotification:userInfo applicationState:application.applicationState];
-     [[UAPush shared] resetBadge]; // zero badge after push received
-     */
+    [[UAPush shared] handleNotification:userInfo applicationState:application.applicationState];
+    [[UAPush shared] resetBadge]; // zero badge after push received
+     
     
     // Now check if it is new content; if so we show an alert
-    if([userInfo objectForKey:@"content-available"]) {
-        if([[UIApplication sharedApplication] applicationState]==UIApplicationStateActive) {
-            // active app -> display an alert
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New issue!"
-                                                            message:@"There is a new issue available."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Close"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        } else {
-            // inactive app -> do something else (e.g. download the latest issue)
-        }
-    }
+    [self handlePayload:userInfo];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -112,6 +101,14 @@
     [UAirship land];
 
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)handlePayload:(NSDictionary *)payload
+{
+    NSLog(@"%@",payload);
+    NSDictionary *issue = [payload objectForKey:@"issue"];
+    [Publisher sharedPublisher].content_available = [issue objectForKey:@"name"];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"content-available" object:nil userInfo:issue];
 }
 
 @end

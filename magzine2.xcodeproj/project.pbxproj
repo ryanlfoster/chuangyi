@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		854474C216E19BD0009C5C03 /* CoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 854474C116E19BD0009C5C03 /* CoverViewController.m */; };
+		859AA74316E33291001DD97A /* 001.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 859AA74216E33291001DD97A /* 001.jpg */; };
 		B02A588916DF1329008C6789 /* button-left-480.png in Resources */ = {isa = PBXBuildFile; fileRef = B02A585D16DF1328008C6789 /* button-left-480.png */; };
 		B02A588A16DF1329008C6789 /* button-left-480@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B02A585E16DF1328008C6789 /* button-left-480@2x.png */; };
 		B02A588B16DF1329008C6789 /* button-left-568.png in Resources */ = {isa = PBXBuildFile; fileRef = B02A585F16DF1328008C6789 /* button-left-568.png */; };
@@ -121,6 +123,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		854474C016E19BD0009C5C03 /* CoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverViewController.h; sourceTree = "<group>"; };
+		854474C116E19BD0009C5C03 /* CoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverViewController.m; sourceTree = "<group>"; };
+		859AA74216E33291001DD97A /* 001.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 001.jpg; sourceTree = "<group>"; };
 		B02A585D16DF1328008C6789 /* button-left-480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-left-480.png"; sourceTree = "<group>"; };
 		B02A585E16DF1328008C6789 /* button-left-480@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-left-480@2x.png"; sourceTree = "<group>"; };
 		B02A585F16DF1328008C6789 /* button-left-568.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-left-568.png"; sourceTree = "<group>"; };
@@ -343,7 +348,6 @@
 		B0A0331D16B0E89C00B089F0 = {
 			isa = PBXGroup;
 			children = (
-				B0ACCE3716CCBD90000945D4 /* libUAirship-1.4.0.a */,
 				B0A0333216B0E89C00B089F0 /* magzine2 */,
 				B0A0332B16B0E89C00B089F0 /* Frameworks */,
 				B0A0332916B0E89C00B089F0 /* Products */,
@@ -361,6 +365,7 @@
 		B0A0332B16B0E89C00B089F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B0ACCE3716CCBD90000945D4 /* libUAirship-1.4.0.a */,
 				B0A0339E16B29C4E00B089F0 /* libz.dylib */,
 				B0ACCE2716CAA2D7000945D4 /* libsqlite3.dylib */,
 				B0ACCE3116CAA31E000945D4 /* MapKit.framework */,
@@ -391,16 +396,18 @@
 				B03EC3E616B7BBD500F66736 /* Publisher.m */,
 				B0A0338716B23FEA00B089F0 /* RackViewController.h */,
 				B0A0338816B23FEB00B089F0 /* RackViewController.m */,
+				B097BACC16B3986100F9C17A /* MagazineCell.h */,
+				B097BACD16B3986100F9C17A /* MagazineCell.m */,
+				B03EC3F016B7D0BA00F66736 /* MagazineObject.h */,
+				B03EC3F116B7D0BA00F66736 /* MagazineObject.m */,
 				B0A0334416B0E89C00B089F0 /* RootViewController.h */,
 				B0A0334516B0E89C00B089F0 /* RootViewController.m */,
 				B0A0334716B0E89C00B089F0 /* DataViewController.h */,
 				B0A0334816B0E89C00B089F0 /* DataViewController.m */,
 				B0A0334A16B0E89C00B089F0 /* ModelController.h */,
 				B0A0334B16B0E89C00B089F0 /* ModelController.m */,
-				B097BACC16B3986100F9C17A /* MagazineCell.h */,
-				B097BACD16B3986100F9C17A /* MagazineCell.m */,
-				B03EC3F016B7D0BA00F66736 /* MagazineObject.h */,
-				B03EC3F116B7D0BA00F66736 /* MagazineObject.m */,
+				854474C016E19BD0009C5C03 /* CoverViewController.h */,
+				854474C116E19BD0009C5C03 /* CoverViewController.m */,
 				B0ACCE1916CA87BF000945D4 /* ReceiptCheck.h */,
 				B0ACCE1A16CA87BF000945D4 /* ReceiptCheck.m */,
 				B0ACCE1C16CA8821000945D4 /* NSString+Base64.h */,
@@ -418,6 +425,7 @@
 		B0A0333316B0E89C00B089F0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				859AA74216E33291001DD97A /* 001.jpg */,
 				B02A585D16DF1328008C6789 /* button-left-480.png */,
 				B02A585E16DF1328008C6789 /* button-left-480@2x.png */,
 				B02A585F16DF1328008C6789 /* button-left-568.png */,
@@ -626,6 +634,7 @@
 				B02A58B216DF1329008C6789 /* txt-568@2x.png in Resources */,
 				B02A58B316DF1329008C6789 /* txt-1024.png in Resources */,
 				B02A58B416DF1329008C6789 /* txt-1024@2x.png in Resources */,
+				859AA74316E33291001DD97A /* 001.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,6 +675,7 @@
 				B03EC3F216B7D0BA00F66736 /* MagazineObject.m in Sources */,
 				B0ACCE1B16CA87BF000945D4 /* ReceiptCheck.m in Sources */,
 				B0ACCE1E16CA8821000945D4 /* NSString+Base64.m in Sources */,
+				854474C216E19BD0009C5C03 /* CoverViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -741,7 +751,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: LI HAO (NU39J7MAKV)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: LI HAO (NU39J7MAKV)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: LI HAO (NU39J7MAKV)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -750,7 +760,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
+				"PROVISIONING_PROFILE[sdk=*]" = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -767,7 +777,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../Airship\"",
+					"\"$(SRCROOT)/../Airship\"/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -784,7 +794,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../Airship\"",
+					"\"$(SRCROOT)/../Airship\"/**",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

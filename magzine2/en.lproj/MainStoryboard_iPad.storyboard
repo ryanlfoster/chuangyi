@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C60" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="3vv-DL-LuT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C3103" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="3vv-DL-LuT">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -26,7 +26,7 @@
         <!--Rack View Controller - 创诣-->
         <scene sceneID="qhV-YT-Hzm">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" hidesBottomBarWhenPushed="YES" id="uRJ-Sn-Ub2" customClass="RackViewController" sceneMemberID="viewController">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="uRJ-Sn-Ub2" customClass="RackViewController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="sj6-dv-xkk">
                         <rect key="frame" x="0.0" y="64" width="768" height="916"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -54,7 +54,11 @@
                             <outlet property="delegate" destination="uRJ-Sn-Ub2" id="IHE-pE-BDu"/>
                         </connections>
                     </collectionView>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem title="魔山传播" style="plain" id="E6m-Xc-Oym"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="yDA-Oz-f86"/>
+                        <barButtonItem title="红泉电商" style="plain" id="AV8-XK-O72"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="创诣" id="aOu-OY-wqC">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="KL3-pi-Is3">
                             <connections>
@@ -62,6 +66,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="refreshButton" destination="KL3-pi-Is3" id="1d9-xP-EDz"/>
                         <segue destination="2" kind="push" identifier="ReadSegue" id="HM0-dr-zj1"/>
@@ -74,45 +79,71 @@
         <!--Root View Controller-->
         <scene sceneID="4">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
                 <viewController id="2" customClass="RootViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="16">
                         <rect key="frame" x="0.0" y="64" width="768" height="916"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" maximumZoomScale="2" id="aNE-zL-3vm">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" maximumZoomScale="3" id="aNE-zL-3vm">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="916"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="delegate" destination="2" id="rsl-vo-Y7v"/>
                                 </connections>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Tgs-Kl-CuG"/>
-                        <barButtonItem style="plain" id="IbD-yb-ER6">
-                            <slider key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="DLg-Tk-2Bv">
-                                <rect key="frame" x="41" y="11" width="685" height="23"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            </slider>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Td6-GN-GQ8"/>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="rmb-RI-abL">
-                        <barButtonItem key="rightBarButtonItem" title="订阅" id="pGK-Y5-sAb"/>
+                        <barButtonItem key="rightBarButtonItem" title="订阅" id="pGK-Y5-sAb">
+                            <connections>
+                                <action selector="subscribe:" destination="2" id="Ah1-XV-GGz"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="scrollView" destination="aNE-zL-3vm" id="78B-3w-p8m"/>
-                        <outlet property="slider" destination="DLg-Tk-2Bv" id="28p-5h-M28"/>
+                        <segue destination="D8O-gp-0jd" kind="modal" identifier="CoverSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="08u-Ml-8Qt"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="947" y="-232"/>
+            <point key="canvasLocation" x="1012" y="-234"/>
+        </scene>
+        <!--Cover View Controller-->
+        <scene sceneID="L5u-Up-Aye">
+            <objects>
+                <viewController id="D8O-gp-0jd" customClass="CoverViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aNP-5K-1EV">
+                        <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView contentMode="scaleAspectFit" id="QKm-Uu-rvh">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Hh9-Va-WyT" appends="YES" id="v8x-rG-rrD"/>
+                                </connections>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="QKm-Uu-rvh" id="P3Z-hQ-bAe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5ZM-Vf-lTE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Hh9-Va-WyT">
+                    <connections>
+                        <action selector="tap:" destination="D8O-gp-0jd" id="BW3-CR-wPn"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1837" y="-234"/>
         </scene>
         <!--Data View Controller-->
         <scene sceneID="7">
@@ -127,7 +158,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     </view>
                     <connections>
@@ -136,7 +167,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1864" y="-232"/>
+            <point key="canvasLocation" x="2676" y="-232"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
