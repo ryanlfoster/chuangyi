@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RackViewController : PSUICollectionViewController <UICollectionViewDelegateFlowLayout>
+@interface RackViewController : PSUICollectionViewController <UICollectionViewDelegateFlowLayout,UIAlertViewDelegate>
 
 @end

@@ -55,9 +55,17 @@
                         </connections>
                     </collectionView>
                     <toolbarItems>
-                        <barButtonItem title="魔山传播" style="plain" id="E6m-Xc-Oym"/>
+                        <barButtonItem title="魔山传播授权" style="plain" id="E6m-Xc-Oym">
+                            <connections>
+                                <action selector="copyright:" destination="uRJ-Sn-Ub2" id="wQD-vq-n5Q"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="yDA-Oz-f86"/>
-                        <barButtonItem title="红泉电商" style="plain" id="AV8-XK-O72"/>
+                        <barButtonItem title="红泉电商开发" style="plain" id="AV8-XK-O72">
+                            <connections>
+                                <action selector="develope:" destination="uRJ-Sn-Ub2" id="2J9-0T-3B1"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="创诣" id="aOu-OY-wqC">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="KL3-pi-Is3">
@@ -79,7 +87,6 @@
         <!--Root View Controller-->
         <scene sceneID="4">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
                 <viewController id="2" customClass="RootViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="16">
                         <rect key="frame" x="0.0" y="64" width="768" height="916"/>
@@ -110,6 +117,7 @@
                         <segue destination="D8O-gp-0jd" kind="modal" identifier="CoverSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="08u-Ml-8Qt"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1012" y="-234"/>
         </scene>

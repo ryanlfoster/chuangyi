@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		854474C216E19BD0009C5C03 /* CoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 854474C116E19BD0009C5C03 /* CoverViewController.m */; };
-		859AA74316E33291001DD97A /* 001.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 859AA74216E33291001DD97A /* 001.jpg */; };
 		B02A588916DF1329008C6789 /* button-left-480.png in Resources */ = {isa = PBXBuildFile; fileRef = B02A585D16DF1328008C6789 /* button-left-480.png */; };
 		B02A588A16DF1329008C6789 /* button-left-480@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B02A585E16DF1328008C6789 /* button-left-480@2x.png */; };
 		B02A588B16DF1329008C6789 /* button-left-568.png in Resources */ = {isa = PBXBuildFile; fileRef = B02A585F16DF1328008C6789 /* button-left-568.png */; };
@@ -125,7 +124,6 @@
 /* Begin PBXFileReference section */
 		854474C016E19BD0009C5C03 /* CoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverViewController.h; sourceTree = "<group>"; };
 		854474C116E19BD0009C5C03 /* CoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverViewController.m; sourceTree = "<group>"; };
-		859AA74216E33291001DD97A /* 001.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 001.jpg; sourceTree = "<group>"; };
 		B02A585D16DF1328008C6789 /* button-left-480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-left-480.png"; sourceTree = "<group>"; };
 		B02A585E16DF1328008C6789 /* button-left-480@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-left-480@2x.png"; sourceTree = "<group>"; };
 		B02A585F16DF1328008C6789 /* button-left-568.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-left-568.png"; sourceTree = "<group>"; };
@@ -425,7 +423,6 @@
 		B0A0333316B0E89C00B089F0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				859AA74216E33291001DD97A /* 001.jpg */,
 				B02A585D16DF1328008C6789 /* button-left-480.png */,
 				B02A585E16DF1328008C6789 /* button-left-480@2x.png */,
 				B02A585F16DF1328008C6789 /* button-left-568.png */,
@@ -634,7 +631,6 @@
 				B02A58B216DF1329008C6789 /* txt-568@2x.png in Resources */,
 				B02A58B316DF1329008C6789 /* txt-1024.png in Resources */,
 				B02A58B416DF1329008C6789 /* txt-1024@2x.png in Resources */,
-				859AA74316E33291001DD97A /* 001.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,6 +730,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "创诣";
 				PROVISIONING_PROFILE = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
 				SDKROOT = iphoneos;
@@ -759,6 +756,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PRODUCT_NAME = "创诣";
 				PROVISIONING_PROFILE = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
 				"PROVISIONING_PROFILE[sdk=*]" = "7EE9CD01-D8AB-4887-AB52-A355F9D782F1";
 				SDKROOT = iphoneos;

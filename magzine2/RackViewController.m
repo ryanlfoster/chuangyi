@@ -248,5 +248,27 @@
     }
     return URL;
 }
+- (IBAction)copyright:(id)sender {
+    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"http://www.imoshan.com"]];
+}
+- (IBAction)develope:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"(+86)186-2136-2156" message:@"移动杂志开发外包" delegate:self cancelButtonTitle:@"确认" otherButtonTitles:@"接通贵宾专线", nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView dismissWithClickedButtonIndex:buttonIndex animated:YES];
+    switch (buttonIndex) {
+        case 0:
+
+            break;
+        case 1:
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"tel://+8618621562136"]];
+            break;
+        default:
+            break;
+    }
+}
 
 @end

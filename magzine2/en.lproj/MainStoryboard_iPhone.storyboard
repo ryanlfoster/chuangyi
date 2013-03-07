@@ -36,9 +36,17 @@
                         </connections>
                     </collectionView>
                     <toolbarItems>
-                        <barButtonItem title="魔山传播" style="plain" id="KUm-WP-TBd"/>
+                        <barButtonItem title="魔山传播授权" style="plain" id="KUm-WP-TBd">
+                            <connections>
+                                <action selector="copyright:" destination="3Md-n3-wB8" id="Rea-sC-LLq"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="NFL-AR-sCQ"/>
-                        <barButtonItem title="红泉电商" style="plain" id="gAk-zV-sVh"/>
+                        <barButtonItem title="红泉电商开发" style="plain" id="gAk-zV-sVh">
+                            <connections>
+                                <action selector="develope:" destination="3Md-n3-wB8" id="qcH-TD-ta7"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="创诣" id="6cn-8R-ijg">
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="oum-LL-vzS">
