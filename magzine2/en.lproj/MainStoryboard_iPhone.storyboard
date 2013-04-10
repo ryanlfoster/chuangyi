@@ -54,6 +54,11 @@
                                 <action selector="refresh:" destination="3Md-n3-wB8" id="w5V-mP-FeA"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="订阅" id="Mum-0k-zAz">
+                            <connections>
+                                <action selector="subscribe:" destination="3Md-n3-wB8" id="uIV-XL-cbu"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -85,13 +90,7 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="gf7-yq-i69">
-                        <barButtonItem key="rightBarButtonItem" title="订阅" id="CCU-rJ-ch0">
-                            <connections>
-                                <action selector="subscribe:" destination="5" id="TOO-OD-8MA"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="gf7-yq-i69"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="scrollView" destination="med-ng-Mrq" id="emO-Id-zSy"/>

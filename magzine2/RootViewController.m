@@ -219,8 +219,6 @@
 }
 
 
-- (IBAction)subscribe:(id)sender {
-    [[Publisher sharedPublisher]subscribe];
-}
+
 
 @end

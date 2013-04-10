@@ -256,6 +256,10 @@
     [alert show];
 }
 
+- (IBAction)subscribe:(id)sender {
+    [[Publisher sharedPublisher]subscribe];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView dismissWithClickedButtonIndex:buttonIndex animated:YES];

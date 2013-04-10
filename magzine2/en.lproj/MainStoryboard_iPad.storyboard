@@ -73,6 +73,11 @@
                                 <action selector="refresh:" destination="uRJ-Sn-Ub2" id="wPw-hd-P1a"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="订阅" id="hHw-vP-N2Y">
+                            <connections>
+                                <action selector="subscribe:" destination="uRJ-Sn-Ub2" id="tx4-Af-iD4"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -105,13 +110,7 @@
                         <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="rmb-RI-abL">
-                        <barButtonItem key="rightBarButtonItem" title="订阅" id="pGK-Y5-sAb">
-                            <connections>
-                                <action selector="subscribe:" destination="2" id="Ah1-XV-GGz"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="rmb-RI-abL"/>
                     <connections>
                         <outlet property="scrollView" destination="aNE-zL-3vm" id="78B-3w-p8m"/>
                         <segue destination="D8O-gp-0jd" kind="modal" identifier="CoverSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="08u-Ml-8Qt"/>

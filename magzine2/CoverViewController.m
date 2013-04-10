@@ -28,6 +28,7 @@
 {
     [super viewDidLoad];
     self.imageView.image = self.cover;
+    [[UIApplication sharedApplication]setNewsstandIconImage:self.cover];
 	// Do any additional setup after loading the view.
 }
 
